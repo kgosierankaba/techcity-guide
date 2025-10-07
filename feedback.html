@@ -70,11 +70,10 @@
         
         nav a {
             color: white;
-            padding: 0.75rem 0.75rem;
+            padding: 0.75rem 1rem;
             text-decoration: none;
             text-transform: uppercase;
             font-weight: 600;
-            font-size: 0.9rem;
             transition: background-color 0.3s, color 0.3s;
             border-radius: 6px;
         }
@@ -238,12 +237,9 @@
             <a href="#overview">Overview</a>
             <a href="#setup">Setup</a>
             <a href="#flows">Flows</a>
-            <a href="#appendix-a">A: Vars</a>
-            <a href="#appendix-b">B: JSON</a>
-            <a href="#appendix-c">C: DAX</a>
-            <a href="#appendix-d">D: Fixes</a>
-            <a href="#appendix-e">E: Roadmap</a>
-            <a href="#appendix-f">F: Checklist</a>
+            <a href="#appendix-a">Appendix A</a>
+            <a href="#appendix-b">Appendix B</a>
+            <a href="#next-steps">Next Steps</a>
         </div>
     </nav>
 
@@ -273,14 +269,9 @@
                 <li><code>Priority</code> (Choice - High, Medium, Low)</li>
                 <li><code>LastUpdate</code> (Date and time)</li>
                 <li><code>ResolutionNotes</code> (Multiple lines of text)</li>
-                <li><code>FeedbackScore</code> (Number - *For client satisfaction score*)</li>
-                <li><code>FeedbackComments</code> (Multiple lines of text)</li>
-                <li><code>DateLogged</code> (Date and time - *Required for DAX/Power BI metrics*)</li>
-                <li><code>DateClosed</code> (Date and time - *Required for DAX/Power BI metrics, should be populated when status changes to 'Closed'*)</li>
-                <li><code>TimeSpentHours</code> (Number - *Required for DAX/Power BI metrics, manually logged by technician*)</li>
             </ul>
             <div class="alert alert-warning">
-                <strong>CRITICAL:</strong> Ensure **Automated Ticket Creation** is set up (e.g., via a simple Microsoft Form or a monitored mailbox) to populate the initial *Title*, *Description*, *ClientEmail*, and *DateLogged* fields.
+                <strong>CRITICAL:</strong> Ensure **Automated Ticket Creation** is set up (e.g., via a simple Microsoft Form or a monitored mailbox) to populate the initial *Title*, *Description*, and *ClientEmail* fields.
             </div>
 
             <h3>B. Power Automate Connections</h3>
@@ -289,7 +280,7 @@
                 <li>SharePoint Online (to read/write ticket data).</li>
                 <li>Microsoft Teams (to post alerts).</li>
                 <li>Office 365 Users (to get user profiles).</li>
-                <li>Microsoft Forms (for client feedback).</li>
+                <li>(For Flow 5) Microsoft Forms or Dataverse (for client feedback).</li>
             </ol>
             <p>When importing the flows in **Appendix B**, you will be prompted to select existing or create new connections for each of these services.</p>
         </section>
@@ -317,7 +308,7 @@
                 <li>
                     <h3>Flow 4: Client Confirmation & Resolution</h3>
                     <p><strong>Trigger:</strong> Item modified (when *TicketStatus* changes to **Resolved**).</p>
-                    <p><strong>Action:</strong> Sends an email to the *ClientEmail* with a summary of the resolution (*ResolutionNotes*) and a link to a **Client Feedback Form**. Sets a 7-day timer to automatically change the status to **Closed** (and populates **DateClosed**) if no action is taken by the client.</p>
+                    <p><strong>Action:</strong> Sends an email to the *ClientEmail* with a summary of the resolution (*ResolutionNotes*) and a link to a **Client Feedback Form**. Sets a 7-day timer to automatically change the status to **Closed** if no action is taken by the client.</p>
                 </li>
                 <li>
                     <h3>Flow 5: Client Feedback Processing</h3>
@@ -328,17 +319,14 @@
         </section>
 
         <section id="appendix-a">
-            <h2>4. Appendix A: Placeholder Variables</h2>
+            <h2>4. Appendix A: SharePoint List References</h2>
             <p>The following are required placeholder variables used within the Power Automate JSON files. **You must replace these placeholders** (e.g., <code>[[SharePoint_Site_URL]]</code>) with your organization's actual values before activating the flows.</p>
             <ul>
                 <li><code>[[SharePoint_Site_URL]]</code>: The URL of the SharePoint site hosting the <code>Service Desk Tickets</code> list.</li>
                 <li><code>[[SharePoint_ServiceDesk_List_ID]]</code>: The GUID or list name of the <code>Service Desk Tickets</code> list.</li>
                 <li><code>[[Teams_Triage_Team_ID]]</code>: The Group ID of the Teams team used for initial ticket assignment.</li>
-                <li><code>[[Teams_Channel_ID_Triage]]</code>: The Channel ID within the Triage Team where new ticket alerts are posted.</li>
-                <li><code>[[Teams_Management_Team_ID]]</code>: The Group ID of the Teams team for high-priority escalations and feedback alerts.</li>
-                <li><code>[[Teams_Channel_ID_Escalations]]</code>: The Channel ID within the Management Team where stale ticket alerts are posted.</li>
+                <li><code>[[Teams_Management_Team_ID]]</code>: The Group ID of the Teams team for high-priority escalations.</li>
                 <li><code>[[Forms_Feedback_ID]]</code>: The ID of the Microsoft Form used for collecting client satisfaction scores.</li>
-                <li><code>[[Forms_Feedback_Link]]</code>: The direct share link to the Microsoft Form (used in the Resolution Email).</li>
                 <li><code>[[Teams_Channel_ID_Feedback]]</code>: The Channel ID within the Management Team where low scores are posted.</li>
             </ul>
         </section>
@@ -353,7 +341,7 @@
                 <div class="code-header">
                     <div class="flex space-x-2">
                         <button onclick="copyCode('flow-1-code')">Copy Code</button>
-                        <button onclick="exportCode('flow-1-code', 'Flow_01-NewTicketAssignment.json')">Export JSON</button>
+                        <button onclick="exportCode('flow-1-code', 'Flow_01-NewTicketAssignment')">Export JSON</button>
                     </div>
                     <button onclick="toggleCollapse('flow-1')">Toggle JSON</button>
                 </div>
@@ -424,7 +412,7 @@
                 <div class="code-header">
                     <div class="flex space-x-2">
                         <button onclick="copyCode('flow-2-code')">Copy Code</button>
-                        <button onclick="exportCode('flow-2-code', 'Flow_02-TechnicianAssignedAlert.json')">Export JSON</button>
+                        <button onclick="exportCode('flow-2-code', 'Flow_02-TechnicianAssignedAlert')">Export JSON</button>
                     </div>
                     <button onclick="toggleCollapse('flow-2')">Toggle JSON</button>
                 </div>
@@ -499,7 +487,7 @@
                 <div class="code-header">
                     <div class="flex space-x-2">
                         <button onclick="copyCode('flow-3-code')">Copy Code</button>
-                        <button onclick="exportCode('flow-3-code', 'Flow_03-StaleTicketEscalation.json')">Export JSON</button>
+                        <button onclick="exportCode('flow-3-code', 'Flow_03-StaleTicketEscalation')">Export JSON</button>
                     </div>
                     <button onclick="toggleCollapse('flow-3')">Toggle JSON</button>
                 </div>
@@ -589,7 +577,7 @@
                 <div class="code-header">
                     <div class="flex space-x-2">
                         <button onclick="copyCode('flow-4-code')">Copy Code</button>
-                        <button onclick="exportCode('flow-4-code', 'Flow_04-ClientConfirmationResolution.json')">Export JSON</button>
+                        <button onclick="exportCode('flow-4-code', 'Flow_04-ClientConfirmationResolution')">Export JSON</button>
                     </div>
                     <button onclick="toggleCollapse('flow-4')">Toggle JSON</button>
                 </div>
@@ -666,7 +654,6 @@
                                 "listName": "[[SharePoint_ServiceDesk_List_ID]]",
                                 "id": "@triggerBody()?['ID']",
                                 "item/TicketStatus": "Closed",
-                                "item/DateClosed": "@utcNow()",
                                 "item/LastUpdate": "@utcNow()"
                             },
                             "authentication": { "type": "ManagedServiceIdentity" }
@@ -690,7 +677,7 @@
                 <div class="code-header">
                     <div class="flex space-x-2">
                         <button onclick="copyCode('flow-5-code')">Copy Code</button>
-                        <button onclick="exportCode('flow-5-code', 'Flow_05-ClientFeedbackProcessing.json')">Export JSON</button>
+                        <button onclick="exportCode('flow-5-code', 'Flow_05-ClientFeedbackProcessing')">Export JSON</button>
                     </div>
                     <button onclick="toggleCollapse('flow-5')">Toggle JSON</button>
                 </div>
@@ -729,7 +716,7 @@
           "runAfter": { "Get_response_details": ["Succeeded"] },
           "type": "Compose",
           "inputs": "@coalesce(outputs('Get_response_details')?['body/r7ccb2875f53245598692794101684c17'], '1')" 
-          /* NOTE: The Forms Question ID (r7ccb2875f53245598692794101684c17) for the hidden Ticket ID field MUST be manually verified and updated to match your Forms structure. */
+          /* NOTE: Assumes a Forms question field (ID: r7ccb2875f53245598692794101684c17) is hidden/pre-populated with the Ticket ID, or defaults to 1 if not found. Adjust ID to your Forms structure. */
         },
         "Update_SharePoint_Item": {
           "runAfter": { "Extract_Ticket_ID": ["Succeeded"] },
@@ -776,163 +763,24 @@
             
         </section>
 
-        <section id="appendix-c">
-            <h2>6. Appendix C: Power BI DAX Measures</h2>
-            <p>These Data Analysis Expressions (DAX) are designed for use in Power BI Desktop. Connect your report to the SharePoint <code>Service Desk Tickets</code> list and create these as new measures to track core service desk performance metrics.</p>
-
-            <h3>Usage</h3>
-            <p>The measures assume the SharePoint list is imported as a table named <code>'Service Desk'</code> and relies on the following columns from Section 2A: <code>Status</code>, <code>TimeSpentHours</code>, <code>DateLogged</code>, and <code>DateClosed</code>.</p>
-
-            <div class="code-block collapsed" id="dax-measures">
-                <div class="code-header">
-                    <div class="flex space-x-2">
-                        <button onclick="copyCode('dax-measures-code')">Copy DAX</button>
-                        <button onclick="exportCode('dax-measures-code', 'PowerBI_DAX_Measures.dax')">Export DAX</button>
-                    </div>
-                    <button onclick="toggleCollapse('dax-measures')">Toggle DAX</button>
-                </div>
-                <div class="code-content">
-                    <pre id="dax-measures-code">
-// Core Metrics
-Tickets Created = COUNTROWS('Service Desk')
-Tickets Closed = CALCULATE(COUNTROWS('Service Desk'), 'Service Desk'[Status] = "Closed")
-Resolution Rate = DIVIDE([Tickets Closed], [Tickets Created], 0)
-
-// Time Metrics
-Avg. Resolution Time (Hours) = AVERAGEX(
-    FILTER('Service Desk', 'Service Desk'[Status] = "Closed" && NOT(ISBLANK('Service Desk'[DateClosed]))),
-    DATEDIFF('Service Desk'[DateLogged], 'Service Desk'[DateClosed], HOUR))
-
-// Effort Metrics
-Total Hours Logged = SUM('Service Desk'[TimeSpentHours])
-Avg. Hours per Ticket = AVERAGE('Service Desk'[TimeSpentHours])
-
-// Workload Metrics
-Open Ticket Count = CALCULATE(COUNTROWS('Service Desk'), 'Service Desk'[Status] <> "Closed")
-Tickets by Technician = COUNTROWS('Service Desk')
-</pre>
-                </div>
-            </div>
-        </section>
-        
-        <section id="appendix-d">
-            <h2>7. Appendix D: Troubleshooting & Known Issues</h2>
-            <p>This section outlines common issues encountered during deployment and operation, along with simple steps to resolve them.</p>
-
-            <h3>Issue 1: Flow Import Fails / Connection Errors</h3>
-            <ul>
-                <li><strong>Symptom:</strong> When importing the JSON, Power Automate shows a red X next to one or more connections (SharePoint, Teams).</li>
-                <li><strong>Resolution:</strong> Ensure you are logged into Power Automate with an account that has licenses and permissions for all required connectors. When prompted, re-establish the connection by clicking the plus icon and signing in with the correct account.</li>
-            </ul>
-
-            <h3>Issue 2: Flow Runs Successfully but Does Nothing</h3>
-            <ul>
-                <li><strong>Symptom:</strong> The flow history shows "Succeeded," but no Teams message or SharePoint update occurred.</li>
-                <li><strong>Resolution:</strong> This is almost always a **placeholder error** (Appendix A). Check the inputs of the failed action (e.g., `Post_Triage_Alert_to_Teams`) to ensure:
-                    <ol>
-                        <li><code>[[Teams_Triage_Team_ID]]</code> is replaced with the correct Group ID.</li>
-                        <li><code>[[SharePoint_Site_URL]]</code> is the exact, complete site address.</li>
-                    </ol>
-                    The flow succeeds internally but fails to connect to the external Microsoft 365 resource because the target ID/URL is invalid.</li>
-            </ul>
-            
-            <h3>Issue 3: Stale Ticket Escalation (Flow 3) Not Triggering</h3>
-            <ul>
-                <li><strong>Symptom:</strong> Tickets become stale, but no escalation alert is sent at 9:00 AM.</li>
-                <li><strong>Resolution:</strong> Check the **Recurrence trigger** in Flow 3. Ensure the time zone setting in your Power Automate environment matches your local time zone. The flow runs based on your environment's regional settings.</li>
-            </ul>
-
-            <h3>Issue 4: Client Feedback Form (Flow 5) Fails on Ticket ID</h3>
-            <ul>
-                <li><strong>Symptom:</strong> Flow 5 fails at the `Update_SharePoint_Item` step, saying the item ID is invalid.</li>
-                <li><strong>Resolution:</strong> The `Extract_Ticket_ID` step relies on a specific field ID from your Microsoft Form.
-                    <ol>
-                        <li>Ensure your **Client Feedback Form** contains a hidden question field that is pre-filled with the SharePoint Ticket ID.</li>
-                        <li>In Flow 5, you must manually update the Forms Question ID (e.g., `r7ccb2875f53245598692794101684c17`) in the `Extract_Ticket_ID` action to match the actual ID of your Form's hidden field.</li>
-                    </ol>
-                </li>
-            </ul>
-        </section>
-
-        <section id="appendix-e">
-            <h2>8. Appendix E: Future Enhancements & Roadmap</h2>
-            <p>Once the core solution is operational, consider these enhancements to improve user experience, efficiency, and data intelligence.</p>
-
-            <h3>Automation & Integration</h3>
-            <ul>
-                <li><strong>Automated Assignment:</strong> Implement a more complex assignment logic (e.g., using a SharePoint column to list technician specialties) and use the **Router action** in Power Automate to assign tickets automatically based on ticket subject/category.</li>
-                <li><strong>Client Reply Integration:</strong> Configure the email address used in Flow 4 (Resolution Email) as a monitored mailbox. If the client replies, trigger a flow that changes the **TicketStatus** from **Closed** back to **In Progress** and sends an alert to the assigned technician.</li>
-                <li><strong>Advanced Form Data:</strong> Integrate ticket creation directly with a dedicated platform like **Power Apps** or **Dataverse** instead of Microsoft Forms for richer metadata and input validation.</li>
-            </ul>
-
-            <h3>Reporting & Analysis</h3>
-            <ul>
-                <li><strong>Power BI Dashboard:</strong> Build a Power BI report connected to the <code>Service Desk Tickets</code> SharePoint list. Key metrics to track include:
-                    <ul>
-                        <li>Average Time-to-Resolution (MTTR)</li>
-                        <li>Stale Ticket Count by Technician</li>
-                        <li>Average Client Satisfaction Score (CSAT)</li>
-                    </ul>
-                </li>
-                <li><strong>Sentiment Analysis:</strong> Add a step in Flow 5 (Feedback Processing) to use Azure Cognitive Services (or a similar connector) to analyze the sentiment of the *FeedbackComments* before posting the alert, providing more context for the Management Team.</li>
-            </ul>
-        </section>
-
-        <section id="appendix-f">
-            <h2>9. Appendix F: Deployment Checklist</h2>
-            <p>Use this checklist to track your progress through the implementation phases for a structured and successful deployment.</p>
-            
-            <h3>Pre-Deployment</h3>
-            <ul>
-                <li>Obtain necessary admin permissions for SharePoint, Teams, and Power Automate.</li>
-                <li>Identify the Microsoft Team and channel to host the solution.</li>
-                <li>Decide on a distribution list or channel for management alerts.</li>
-            </ul>
-
-            <h3>Phase 1: Foundation (Week 1)</h3>
-            <ol>
-                <li>Create the SharePoint list and all required columns (Section 2A).</li>
-                <li>Add the List as a tab in the designated Teams channel.</li>
-                <li>Customize the Client Name and Category choice columns with your specific values (if applicable).</li>
-                <li>Verify all team members have appropriate edit permissions to the List.</li>
-            </ol>
-
-            <h3>Phase 2: Core Automation (Week 2)</h3>
-            <ol>
-                <li>Import and Configure Flow 1 (New Ticket Alert) using its JSON definition (Appendix B).</li>
-                <li>Import and Configure Flow 2 (Technician Assigned Alert) using its JSON definition (Appendix B).</li>
-                <li>Import and Configure Flow 3 (Stale Ticket Escalation) using its JSON definition (Appendix B).</li>
-                <li>Test all flows by creating and updating test tickets.</li>
-            </ol>
-
-            <h3>Phase 3: Client Automation (Week 3)</h3>
-            <ol>
-                <li>Import and Configure Flow 4 (Client Confirmation) using its JSON definition (Appendix B).</li>
-                <li>Import and Configure Flow 5 (Client Feedback) using its JSON definition (Appendix B).</li>
-                <li>Update the placeholder variables for the **Client Feedback Form ID and Link** (Appendix A).</li>
-                <li>Send test resolution emails to an internal email address for approval.</li>
-            </ol>
-
-            <h3>Phase 4: Analytics (Week 4)</h3>
-            <ol>
-                <li>Connect Power BI Desktop to the SharePoint List.</li>
-                <li>Build a report using the DAX measures from **Appendix C**.</li>
-                <li>Publish the report to a Power BI Workspace.</li>
-                <li>Add the Power BI report as a tab in the Teams channel.</li>
-            </ol>
-        </section>
-        
         <section id="next-steps">
-            <h2>10. Next Steps & Activation</h2>
-            <p>Your solution blueprint is finalized and ready for deployment!</p>
-            <p>Your immediate next step is to begin **Phase 1: Foundation** from the **Deployment Checklist (Appendix F)**, starting with the SharePoint list creation, and then replacing the placeholder variables listed in **Appendix A**.</p>
+            <h2>6. Next Steps & Deployment</h2>
+            <p>Your solution blueprint is now complete! Follow these final steps to deploy:</p>
+            <ol>
+                <li>Complete the SharePoint list setup (Section 2A).</li>
+                <li>Download all five JSON flow files using the **Export JSON** buttons in **Appendix B**.</li>
+                <li>In Power Automate, use the **Import** feature for each JSON file.</li>
+                <li>Update all the placeholder variables (the <code>[[...]]</code> values) in the imported flows with your real **SharePoint URLs, List IDs, and Teams Group IDs** (Appendix A).</li>
+                <li>Activate all five flows.</li>
+                <li>Monitor automations for the first 48 hours.</li>
+            </ol>
         </section>
     </div>
 
     <footer>
         <div class="container">
             <p>TechCity Squad – Microsoft 365 Service Desk Solution</p>
-            <p>Complete Implementation Package v2.2 (Final)</p>
+            <p>Complete Implementation Package v2.1</p>
         </div>
     </footer>
 
@@ -947,7 +795,7 @@ Tickets by Technician = COUNTROWS('Service Desk')
         function copyCode(elementId) {
             const codeElement = document.getElementById(elementId);
             const textArea = document.createElement('textarea');
-            // Use textContent to grab the raw code/JSON, including whitespace
+            // Use textContent to grab the raw JSON, including whitespace
             textArea.value = codeElement.textContent.trim();
             document.body.appendChild(textArea);
             textArea.select();
@@ -963,28 +811,20 @@ Tickets by Technician = COUNTROWS('Service Desk')
             }, 2000);
         }
         
-        // Function to export code as a downloadable file, handling extensions
+        // Function to export code as a downloadable .json file
         function exportCode(elementId, fileName) {
             const codeElement = document.getElementById(elementId);
             // Get content and remove leading/trailing whitespace
             const content = codeElement.textContent.trim(); 
             
-            // Determine MIME type based on file extension
-            let mimeType = 'text/plain';
-            if (fileName.toLowerCase().endsWith('.json')) {
-                mimeType = 'application/json';
-            } else if (fileName.toLowerCase().endsWith('.dax')) {
-                mimeType = 'text/plain'; 
-            }
-            
-            // Create a Blob from the content string
-            const blob = new Blob([content], { type: mimeType });
+            // Create a Blob from the JSON string
+            const blob = new Blob([content], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             
             // Create a temporary anchor element and trigger the download
             const a = document.createElement('a');
             a.href = url;
-            a.download = fileName; // Use the provided filename exactly
+            a.download = fileName.endsWith('.json') ? fileName : fileName + '.json';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -995,7 +835,7 @@ Tickets by Technician = COUNTROWS('Service Desk')
             // Visual feedback
             const button = event.target;
             const originalText = button.textContent;
-            button.textContent = 'Exported!';
+            button.textContent = 'Exporting...';
             setTimeout(() => {
                 button.textContent = originalText;
             }, 2000);
